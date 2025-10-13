@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meganet Internet | Cepat & Terjangkau</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Montserrat',sans-serif;color:#0b0b0b;background:linear-gradient(180deg,#fffaf6,#fff7f0);-webkit-font-smoothing:antialiased}
+
+    /* Container utility */
+    .container{width:92%;max-width:1100px;margin:0 auto}
+
+    /* Navbar */
+    .navbar{position:sticky;top:0;z-index:120;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-bottom:1px solid rgba(15,15,15,0.04)}
+    .navbar .inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .logo{font-family:'Orbitron',sans-serif;color:#ff4800;text-decoration:none;font-size:1.25rem;letter-spacing:1px}
+    nav ul{display:flex;gap:18px;align-items:center;list-style:none}
+    nav a{color:#333;text-decoration:none;font-weight:600;padding:8px;border-radius:8px}
+    nav a:hover{background:rgba(255,72,0,0.08);color:#ff4800}
+    .cta-primary{background:#ff4800;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none;box-shadow:0 6px 18px rgba(255,72,0,0.12)}
+
+    /* Mobile nav */
+    .nav-toggle{display:none;background:none;border:0;font-size:20px}
+    .nav-mobile{display:none}
+
+    /* Hero */
+    .hero{display:flex;align-items:center;gap:40px;padding:70px 0}
+    .hero-grid{display:grid;grid-template-columns:1fr 460px;gap:36px;align-items:center}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:#222;margin-bottom:12px}
+    .hero p{color:#444;font-size:1.05rem;line-height:1.5;margin-bottom:18px}
+    .hero .actions{display:flex;gap:14px;align-items:center}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,15,15,0.06);padding:10px 16px;border-radius:10px}
+
+    .hero-card{background:linear-gradient(180deg,#fff,#fff);border-radius:14px;padding:20px;border:1px solid rgba(15,15,15,0.04);box-shadow:0 10px 30px rgba(3,3,3,0.06)}
+    .hero-card h3{font-family:'Orbitron',sans-serif;color:#ff4800;margin-bottom:8px}
+    .hero-card p{color:#333}
+
+    /* Packages */
+    .section{padding:64px 0}
+    .section h2{font-family:'Orbitron',sans-serif;color:#222;font-size:1.6rem;margin-bottom:18px}
+    .cards{display:flex;flex-wrap:wrap;gap:18px}
+    .card{width:230px;background:white;border-radius:14px;padding:20px;border:1px solid rgba(15,15,15,0.04);box-shadow:0 8px 22px rgba(3,3,3,0.04);transition:transform .28s,box-shadow .28s}
+    .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(3,3,3,0.08)}
+    .card h3{font-family:'Orbitron',sans-serif;color:#ff6b2a;margin-bottom:6px}
+    .card p{color:#333;margin-bottom:6px}
+
+    /* Advantages */
+    .advantages .adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+    .adv{background:white;padding:18px;border-radius:12px;border:1px solid rgba(15,15,15,0.04);text-align:center}
+    .adv i{display:block;font-size:28px;margin-bottom:10px;color:#ff8c4a}
+    .adv h4{font-family:'Orbitron',sans-serif;margin-bottom:8px;color:#222}
+    .adv p{color:#444;font-size:0.95rem}
+
+    /* Testimonials */
+    .testimonials{display:flex;gap:16px;align-items:center}
+    .testimonial{background:white;padding:18px;border-radius:12px;border:1px solid rgba(15,15,15,0.04);box-shadow:0 8px 22px rgba(3,3,3,0.04);flex:1}
+    .testimonial p{color:#333;margin-bottom:10px}
+    .testimonial .meta{font-weight:700;color:#ff4800}
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start}
+    .form {background:white;padding:22px;border-radius:12px;border:1px solid rgba(15,15,15,0.04)}
+    .form label{display:block;font-size:0.9rem;margin-bottom:6px;color:#333}
+    .form input,.form textarea{width:100%;padding:10px;border:1px solid rgba(15,15,15,0.06);border-radius:8px;margin-bottom:12px;font-size:0.95rem}
+    .form button{background:#ff4800;color:white;border:0;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
+
+    /* Footer */
+    .footer{padding:28px 0;text-align:center;color:#666;font-size:0.95rem}
+
+    /* Modals */
+    .modal{display:none;position:fixed;inset:0;background:rgba(5,5,5,0.48);align-items:center;justify-content:center;z-index:999}
+    .modal.show{display:flex}
+    .modal .box{background:#fff;padding:22px;border-radius:12px;max-width:420px;width:92%;text-align:center}
+
+    /* WhatsApp floating */
+    .whatsapp-float{position:fixed;right:20px;bottom:20px;width:62px;height:62px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;z-index:800;box-shadow:0 12px 30px rgba(37,211,102,0.12)}
+    .whatsapp-float img{width:36px;height:36px}
+
+    /* Back to top */
+    .back-top{position:fixed;right:20px;bottom:100px;width:50px;height:50px;border-radius:10px;background:#ff4800;color:#fff;display:flex;align-items:center;justify-content:center;z-index:800;cursor:pointer;box-shadow:0 14px 36px rgba(255,72,0,0.12);display:none}
+    .back-top.show{display:flex}
+
+    /* Animations (simple) */
+    .reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr 1fr}
+      .advantages .adv-grid{grid-template-columns:repeat(2,1fr)}
+      .contact-grid{grid-template-columns:1fr}
+      .hero{padding:48px 0}
+    }
+    @media (max-width:680px){
+      nav ul{display:none}
+      .nav-toggle{display:block}
+      .nav-mobile{display:flex;flex-direction:column;gap:8px;padding:12px}
+      .hero-grid{grid-template-columns:1fr}
+      .cards{justify-content:center}
+      .advantages .adv-grid{grid-template-columns:1fr}
+      .testimonial{min-height:0}
+      .back-top{right:16px;bottom:88px}
+    }
+
+  </style>
+</head>
+<body>
+
+<header class="navbar" role="banner">
+  <div class="container inner">
+    <a href="#" class="logo">
+      <img src="meganet.png" alt="Meganet Logo" style="height:60px; width:auto;">
+    </a>
+
+      <nav>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu">☰</button>
+        <ul class="desktop-menu">
+          <li><a href="#beranda">Beranda</a></li>
+          <li><a href="#paket">Paket</a></li>
+          <li><a href="#keunggulan">Keunggulan</a></li>
+          <li><a href="#testimoni">Testimoni</a></li>
+          <li><a href="#kontak">Kontak</a></li>
+          <li><a href="https://wa.me/6285156371045" target="_blank" class="cta-primary">Kontak</a></li>
+        </ul>
+        <div id="mobile-menu" class="nav-mobile" style="display:none">
+          <a href="#beranda">Beranda</a>
+          <a href="#paket">Paket</a>
+          <a href="#keunggulan">Keunggulan</a>
+          <a href="#testimoni">Testimoni</a>
+          <a href="#kontak">Kontak</a>
+          <a href="https://wa.me/6285156371045" target="_blank" class="cta-primary">Kontak</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="beranda" class="hero container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1 class="reveal">Internet Cepat, Stabil, dan Terjangkau untuk Semua</h1>
+          <p class="reveal">Meganet memberikan layanan fiber optic premium untuk rumah dan kantor dengan dukungan teknisi berpengalaman — instalasi cepat, paket transparan, dan layanan pelanggan 24/7.</p>
+          <div class="actions reveal">
+            <a class="cta-primary" href="https://forms.gle/9eKkrQesRDfwnLkT7" target="_blank">Daftar Sekarang</a>
+            <a class="btn-ghost" href="#paket">Lihat Paket</a>
+          </div>
+        </div>
+
+        <aside class="hero-card reveal" aria-hidden="false">
+          <h3>Promo Terbatas</h3>
+          <p><strong>Fast Home 20</strong> — Rp 150.000 / bulan</p>
+          <p style="margin-top:10px;font-size:0.95rem;color:#555">Instalasi cepat, support 24/7, gratis konsultasi pemasangan.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="paket" class="section container">
+      <h2 class="reveal">Paket Berlangganan Populer</h2>
+      <div class="cards">
+
+        <div class="card reveal">
+          <h3>FAST HOME 20</h3>
+          <p>Up to 20 Mbps</p>
+          <p><strong>Rp 150.000 / bulan</strong></p>
+          <div style="margin-top:10px"><button class="cta-primary" onclick="openModal('modal1')">Pilih Paket</button></div>
+        </div>
+
+        <div class="card reveal">
+          <h3>FAST HOME 30</h3>
+          <p>Up to 30 Mbps</p>
+          <p><strong>Rp 170.000 / bulan</strong></p>
+          <div style="margin-top:10px"><button class="cta-primary" onclick="openModal('modal2')">Pilih Paket</button></div>
+        </div>
+
+        <div class="card reveal">
+          <h3>FAST HOME 40</h3>
+          <p>Up to 40 Mbps</p>
+          <p><strong>Rp 200.000 / bulan</strong></p>
+          <div style="margin-top:10px"><button class="cta-primary" onclick="openModal('modal3')">Pilih Paket</button></div>
+        </div>
+
+        <div class="card reveal">
+          <h3>FAST HOME 60</h3>
+          <p>Up to 60 Mbps</p>
+          <p><strong>Rp 300.000 / bulan</strong></p>
+          <div style="margin-top:10px"><button class="cta-primary" onclick="openModal('modal4')">Pilih Paket</button></div>
+        </div>
+                <div class="card reveal">
+          <h3>FAST HOME 100</h3>
+          <p>Up to 100 Mbps</p>
+          <div style="margin-top:10px"><button class="cta-primary" onclick="openModal('modal5')">Pilih Paket</button></div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="keunggulan" class="section container advantages">
+      <h2 class="reveal">Mengapa Memilih Meganet?</h2>
+      <div class="adv-grid">
+        <div class="adv reveal">
+          <i class="fas fa-network-wired" aria-hidden></i>
+          <h4>Jaringan Fiber Optic</h4>
+          <p>Kecepatan tinggi & stabil dengan teknologi fiber optic modern.</p>
+        </div>
+        <div class="adv reveal">
+          <i class="fas fa-dollar-sign" aria-hidden></i>
+          <h4>Harga Transparan</h4>
+          <p>Paket tanpa biaya tersembunyi — pilihan value untuk keluarga & kantor.</p>
+        </div>
+        <div class="adv reveal">
+          <i class="fas fa-headset" aria-hidden></i>
+          <h4>Support 24/7</h4>
+          <p>Tim support siap membantu melalui WhatsApp dan telepon kapan saja.</p>
+        </div>
+        <div class="adv reveal">
+          <i class="fas fa-tools" aria-hidden></i>
+          <h4>Instalasi Cepat</h4>
+          <p>Teknisi berpengalaman, proses instalasi efisien (1 hari kerja).</p>
+        </div>
+        <div class="adv reveal">
+          <i class="fas fa-infinity" aria-hidden></i>
+          <h4>Unlimited Data</h4>
+          <p>Tanpa batas dengan kebijakan FUP yang adil untuk semua pelanggan.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimoni" class="section container">
+      <h2 class="reveal">Apa Kata Pelanggan</h2>
+      <div class="testimonials">
+        <div class="testimonial reveal">
+          <p>"Koneksi stabil dan tim instalasinya ramah — sangat membantu saat butuh pemasangan cepat."</p>
+          <div class="meta">— Siti, Semen</div>
+        </div>
+        <div class="testimonial reveal">
+          <p>"Harga bersaing dan tidak ada biaya tersembunyi. Streaming lancar tiap malam."</p>
+          <div class="meta">— Budi, Depok</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontak" class="section container">
+      <h2 class="reveal">Hubungi Kami</h2>
+      <div class="contact-grid">
+        <div class="reveal">
+          <p style="margin-bottom:12px;color:#444">Butuh bantuan memilih paket? Isi formulir di bawah atau langsung hubungi Admin Meganet via WhatsApp.</p>
+          <div style="background:white;padding:14px;border-radius:12px;border:1px solid rgba(15,15,15,0.04);max-width:420px">
+            <p style="margin-bottom:8px;font-weight:700;color:#ff4800">📞 0851-5637-1045</p>
+            <p style="margin-bottom:8px;color:#444">✉️ info@meganet.id</p>
+            <p><a href="https://wa.me/6285156371045" target="_blank" class="cta-primary">Chat WhatsApp</a></p>
+          </div>
+        </div>
+
+        <form class="form reveal" id="contactForm" onsubmit="return handleContactSubmit(event)">
+          <label for="name">Nama</label>
+          <input id="name" name="name" type="text" placeholder="Nama lengkap" required>
+
+          <label for="phone">Nomor WhatsApp</label>
+          <input id="phone" name="phone" type="tel" placeholder="08xxxxxxxxxx" required>
+
+          <label for="package">Paket yang diminati</label>
+          <input id="package" name="package" type="text" placeholder="Contoh: FAST HOME 30">
+
+          <label for="message">Pesan</label>
+          <textarea id="message" name="message" rows="4" placeholder="Tinggalkan pesan singkat..." required></textarea>
+
+          <button type="submit">Kirim Permintaan</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Meganet. All Rights Reserved.</p>
+      <p>📞 0851-5637-1045 | ✉️ info@meganet.id</p>
+    </div>
+  </footer>
+
+  <!-- Modal Detail Paket (reused for each) -->
+  <div id="modal1" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>FAST HOME 20</h3>
+      <p>Up to 20 Mbps — Rp 150.000 / bulan</p>
+      <p style="margin:12px 0"><a class="cta-primary" href="https://forms.gle/9eKkrQesRDfwnLkT7" target="_blank">Daftar Sekarang</a></p>
+      <button onclick="closeModal('modal1')" style="margin-top:8px;padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Tutup</button>
+    </div>
+  </div>
+  <div id="modal2" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>FAST HOME 30</h3>
+      <p>Up to 30 Mbps — Rp 170.000 / bulan</p>
+      <p style="margin:12px 0"><a class="cta-primary" href="https://forms.gle/9eKkrQesRDfwnLkT7" target="_blank">Daftar Sekarang</a></p>
+      <button onclick="closeModal('modal2')" style="margin-top:8px;padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Tutup</button>
+    </div>
+  </div>
+  <div id="modal3" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>FAST HOME 40</h3>
+      <p>Up to 40 Mbps — Rp 200.000 / bulan</p>
+      <p style="margin:12px 0"><a class="cta-primary" href="https://forms.gle/9eKkrQesRDfwnLkT7" target="_blank">Daftar Sekarang</a></p>
+      <button onclick="closeModal('modal3')" style="margin-top:8px;padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Tutup</button>
+    </div>
+  </div>
+  <div id="modal4" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>FAST HOME 60</h3>
+      <p>Up to 60 Mbps — Rp 300.000 / bulan</p>
+      <p style="margin:12px 0"><a class="cta-primary" href="https://forms.gle/9eKkrQesRDfwnLkT7" target="_blank">Daftar Sekarang</a></p>
+      <button onclick="closeModal('modal4')" style="margin-top:8px;padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Tutup</button>
+    </div>
+  </div>
+    <div id="modal5" class="modal" aria-hidden="true">
+    <div class="box">
+      <h3>FAST HOME 100</h3>
+      <p>Up to 100 Mbps</p>
+      <p style="margin:12px 0"><a class="cta-primary" href="https://wa.me/6285156371045?text=Halo%20Admin%20Meganet,%20saya%20ingin%20bertanya%20tentang%20paket%20internet." target="_blank">Daftar Sekarang</a></p>
+      <button onclick="closeModal('modal5')" style="margin-top:8px;padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff">Tutup</button>
+    </div>
+  </div>
+
+  <!-- WhatsApp floating -->
+  <a href="https://wa.me/6285156371045?text=Halo%20Admin%20Meganet,%20saya%20ingin%20bertanya%20tentang%20paket%20internet." class="whatsapp-float" target="_blank" aria-label="Chat via WhatsApp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
+  </a>
+
+  <!-- Back to top -->
+  <button id="backTop" class="back-top" aria-label="Kembali ke atas">▲</button>
+
+  <!-- FontAwesome Kit -->
+  <script src="https://kit.fontawesome.com/a2e0e6a9f2.js" crossorigin="anonymous"></script>
+
+  <script>
+    // Mobile nav toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    navToggle && navToggle.addEventListener('click', () => {
+      const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', !expanded);
+      mobileMenu.style.display = mobileMenu.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Modal helpers
+    function openModal(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.add('show');
+      el.setAttribute('aria-hidden','false');
+    }
+    function closeModal(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.remove('show');
+      el.setAttribute('aria-hidden','true');
+    }
+    // Close modal when clicking outside box
+    document.querySelectorAll('.modal').forEach(m => {
+      m.addEventListener('click', (e) => { if(e.target === m) m.classList.remove('show'); });
+    });
+
+    // Back to top visibility
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY > 400) backTop.classList.add('show'); else backTop.classList.remove('show');
+    });
+    backTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+    // Reveal on scroll (simple IntersectionObserver)
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.12});
+    reveals.forEach(r => observer.observe(r));
+
+    // Contact form handler (demo) - show modal and clear
+    function handleContactSubmit(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const pkg = document.getElementById('package').value.trim();
+      const msg = document.getElementById('message').value.trim();
+
+      // Basic validation
+      if(!name||!phone||!msg){
+        alert('Mohon isi semua field yang wajib');
+        return false;
+      }
+
+      // In production: kirim data ke server via fetch/AJAX.
+      // Untuk demo lokal kita cukup tunjukkan modal konfirmasi.
+      const successModal = document.createElement('div');
+      successModal.className = 'modal show';
+      successModal.innerHTML = `<div class="box"><h3>Terima kasih, ${name}!</h3><p>Permintaan Anda telah diterima. Admin akan menghubungi via WhatsApp: <strong>${phone}</strong></p><p style="margin-top:12px"><a href=\"https://wa.me/6285156371045?text=${encodeURIComponent('Halo Admin, saya '+name+' ingin menanyakan paket: '+(pkg||'-')+' - '+msg)}\" target=\"_blank\" class=\"cta-primary\">Hubungi Admin via WhatsApp</a></p><p style=\"margin-top:10px\"><button onclick=\"this.closest(\\'.modal\\').remove()\" style=\"padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff\">Tutup</button></p></div>`;
+      document.body.appendChild(successModal);
+
+      
+      // reset form
+      e.target.reset();
+      return false;
+    }
+
+  </script>
+
+</body>
+</html>
