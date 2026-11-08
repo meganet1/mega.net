@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Jaringan FTTH - MEGANET FTTH MONITORING</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { meganet: { red: '#DC2626', darkred: '#991B1B', lightred: '#FEF2F2' } } }
+            }
+        }
+    </script>
+    <!-- Leaflet CSS & JS CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        #ftthMap { width: 100%; height: 100%; }
+        /* Style untuk permanent label nama di peta */
+        .map-label {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-10">
+            <div class="h-16 flex items-center px-6 border-b border-gray-200 bg-meganet-red text-white">
+                <i class="fa-solid fa-network-wired text-2xl mr-3"></i>
+                <span class="text-xl font-bold tracking-wider">MEGANET</span>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                <a href="dashboard.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-chart-pie w-5 mr-3"></i> Dashboard</a>
+                <a href="olts.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-server w-5 mr-3"></i> Monitoring OLT</a>
+                <a href="onus.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-users w-5 mr-3"></i> Monitoring ONU</a>
+                <a href="traffic.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-chart-line w-5 mr-3"></i> Traffic Network</a>
+                <a href="map.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg bg-meganet-lightred text-meganet-red"><i class="fa-solid fa-map-location-dot w-5 mr-3"></i> Peta Jaringan</a>
+                <a href="alerts.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-triangle-exclamation w-5 mr-3"></i> Gangguan & Alert</a>
+                <a href="history.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-clock-rotate-left w-5 mr-3"></i> Riwayat & Laporan</a>
+                <a href="settings.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900"><i class="fa-solid fa-gear w-5 mr-3"></i> Pengaturan</a>
+            </nav>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500">v1.0.0-DEMO</span>
+                    <a href="login.html" class="text-sm font-medium text-red-600 hover:text-red-800"><i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTAINER -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
+                <h1 class="text-lg font-semibold text-gray-800">Peta Jaringan FTTH & ODP</h1>
+                
+                <!-- MENU SEARCH PETA -->
+                <div class="flex items-center space-x-2">
+                    <div class="relative">
+                        <input type="text" id="searchMapInput" placeholder="Cari ODP / Pelanggan..." 
+                            class="w-64 px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <i class="fa-solid fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 border-l pl-4 border-gray-200">
+                    <div class="w-9 h-9 bg-red-100 text-meganet-red rounded-full flex items-center justify-center font-bold">AD</div>
+                    <div class="hidden sm:block text-left">
+                        <p class="text-sm font-medium text-gray-700 leading-none">Admin Meganet</p>
+                        <p class="text-xs text-gray-500 mt-1">Administrator</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 relative flex flex-col">
+                <!-- MAP CONTAINER -->
+                <div id="ftthMap" class="flex-1 w-full h-full z-0"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Muat Script toGeoJSON converter -->
+    <script src="togeojson.js"></script>
+
+    <script>
+        // Inisialisasi Peta Leaflet
+        const map = L.map('ftthMap').setView([-7.855, 110.232], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let allMarkers = []; // Menyimpan referensi marker untuk fitur search
+
+        // Ambil file KML mapping Google Earth
+        fetch('mapping_meganet.kml')
+            .then(response => {
+                if (!response.ok) throw new Error("File KML tidak ditemukan!");
+                return response.text();
+            })
+            .then(kmlText => {
+                const domParser = new DOMParser();
+                const kmlDom = domParser.parseFromString(kmlText, 'text/xml');
+                const geojsonData = toGeoJSON.kml(kmlDom);
+
+                const layerGeoJSON = L.geoJSON(geojsonData, {
+                    pointToLayer: function (feature, latlng) {
+                        const name = feature.properties.name || '';
+                        let isOdp = name.toUpperCase().includes('ODP');
+                        
+                        let customIcon = L.divIcon({
+                            className: 'custom-div-icon',
+                            html: `<div style="background-color: ${isOdp ? '#DC2626' : '#2563EB'}; color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-size: 11px;">
+                                    <i class="fa-solid ${isOdp ? 'fa-box' : 'fa-user'}"></i>
+                                   </div>`,
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        });
+
+                        let marker = L.marker(latlng, { icon: customIcon });
+
+                        // Simpan data untuk pencarian
+                        allMarkers.push({ name: name.toLowerCase(), marker: marker, latlng: latlng });
+
+                        return marker;
+                    },
+                    style: function(feature) {
+                        return {
+                            color: feature.properties.stroke || '#00ff55',
+                            weight: feature.properties['stroke-width'] || 3,
+                            opacity: 0.8
+                        };
+                    },
+                    onEachFeature: function(feature, layer) {
+                        if (feature.properties && feature.properties.name) {
+                            let name = feature.properties.name;
+                            let desc = feature.properties.description || '';
+                            let latlng = layer.getLatLng ? layer.getLatLng() : null;
+
+                            // Buat link Google Maps Direction jika koordinat tersedia
+                            let gmapsUrl = latlng ? `https://www.google.com/maps/dir/?api=1&destination=${latlng.lat},${latlng.lng}` : '#';
+                            
+                            let popupContent = `
+                                <div style="min-width: 180px;">
+                                    <b style="font-size: 13px; color: #111;">${name}</b><br>
+                                    <p style="font-size: 11px; color: #555; margin: 4px 0;">${desc}</p>
+                                    <hr style="border: 0; border-top: 1px solid #ddd; margin: 6px 0;">
+                                    <a href="${gmapsUrl}" target="_blank" style="display: inline-block; background-color: #2563EB; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; text-decoration: none; font-weight: bold;">
+                                        <i class="fa-solid fa-directions"></i> Petunjuk Arah
+                                    </a>
+                                </div>
+                            `;
+
+                            // Popup saat diklik
+                            layer.bindPopup(popupContent);
+
+                            // Tampilkan nama langsung di peta (Permanent Label)
+                            layer.bindTooltip(name, {
+                                permanent: true,
+                                direction: 'right',
+                                className: 'map-label',
+                                offset: [10, 0]
+                            });
+                        }
+                    }
+                }).addTo(map);
+
+                // Zoom otomatis ke area mapping
+                if (layerGeoJSON.getBounds().isValid()) {
+                    map.fitBounds(layerGeoJSON.getBounds());
+                }
+
+                // Fitur Search / Pencarian Nama ODP / Pelanggan
+                const searchInput = document.getElementById('searchMapInput');
+                searchInput.addEventListener('input', function(e) {
+                    const keyword = e.target.value.toLowerCase();
+                    if (!keyword) return;
+
+                    const found = allMarkers.find(item => item.name.includes(keyword));
+                    if (found) {
+                        map.setView(found.latlng, 18); // Zoom ke lokasi yang dicari
+                        found.marker.openPopup();
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Gagal memuat file KML:", error);
+            });
+    </script>
+</body>
+</html>
